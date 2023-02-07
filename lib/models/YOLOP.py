@@ -552,6 +552,7 @@ class MCnet(nn.Module):
         Da_fmap = []
         LL_fmap = []
         for i, block in enumerate(self.model):
+            print(i, block)
             if block.from_ != -1:
                 x = cache[block.from_] if isinstance(block.from_, int) else [x if j == -1 else cache[j] for j in block.from_]       #calculate concat detect
             x = block(x)
