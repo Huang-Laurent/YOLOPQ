@@ -153,7 +153,7 @@ def main():
     )
     print('load data finished')
 
-        ### Evaluate the original model.
+    ### Evaluate the original model.
     print("\n----- EVALUATION OF A NON COMPRESSED MODEL -----")
 
     epoch = 0 #special for test

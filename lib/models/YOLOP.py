@@ -1,5 +1,6 @@
 import torch
 from torch import tensor
+import torch._dynamo as dynamo
 import torch.nn as nn
 import sys,os
 import math
@@ -543,6 +544,7 @@ class MCnet(nn.Module):
         
         initialize_weights(self)
 
+    @dynamo.optimize("inductor")
     def forward(self, x):
         cache = []
         out = []
