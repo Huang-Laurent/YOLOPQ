@@ -559,8 +559,9 @@ class MCnet(nn.Module):
                 # print(self.seg_out_idx)
                 m=nn.Sigmoid()
                 out.append(m(x))
-            # if i == self.detector_index:
-            if i == -1:
+            if i == self.detector_index:
+            # if i == -1:
+                print(self.detector_index)
                 det_out = x
             cache.append(x if block.index in self.save else None)
         out.insert(0,det_out)
