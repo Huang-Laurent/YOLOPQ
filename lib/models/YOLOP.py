@@ -554,7 +554,12 @@ class MCnet(nn.Module):
         for i, block in enumerate(self.model):
             # print(i, block)
             if block.from_ != -1:
-                x = cache[block.from_] if isinstance(block.from_, int) else [x if j == -1 else cache[j] for j in block.from_]       #calculate concat detect
+                # x = cache[block.from_] if isinstance(block.from_, int) else [x if j == -1 else cache[j] for j in block.from_]
+                temp = cache[block.from_]
+                if isinstance(temp, int):
+                    x = cache[block.from_]
+                else:
+                    [x if j == -1 else cache[j] for j in block.from_]      #calculate concat detect
                 print(block.from_)
             x = block(x)
             if i in [33, 42]: #self.seg_out_idx:     #save driving area segment result
