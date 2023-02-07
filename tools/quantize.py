@@ -1,4 +1,3 @@
-import torchvision.models as models                           # for example model
 from mqbench.prepare_by_platform import prepare_by_platform   # add quant nodes for specific Backend
 from mqbench.prepare_by_platform import BackendType           # contain various Backend, like TensorRT, NNIE, etc.
 from mqbench.utils.state import enable_calibration            # turn on calibration algorithm, determine scale, zero_point, etc.
