@@ -559,7 +559,14 @@ class MCnet(nn.Module):
                 if isinstance(block.from_, int):
                     x = cache[block.from_]
                 else:
-                    x = [x if j == -1 else cache[j] for j in block.from_]#calculate concat detect
+                    # x = [x if j == -1 else cache[j] for j in block.from_] #calculate concat detect
+                    result = []
+                    for j in block.from_:
+                        if j == -1:
+                            result.append(x)
+                        else:
+                            result.append(cache[j])
+                    x = result
                     
                 # print(block.from_)
             x = block(x)
