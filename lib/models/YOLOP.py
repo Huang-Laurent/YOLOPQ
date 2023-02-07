@@ -1,6 +1,6 @@
 import torch
 from torch import tensor
-import torch._dynamo as dynamo
+# import torch._dynamo as dynamo
 import torch.nn as nn
 import sys,os
 import math
@@ -544,7 +544,7 @@ class MCnet(nn.Module):
         
         initialize_weights(self)
 
-    @dynamo.optimize("inductor")
+    # @dynamo.optimize("inductor")
     def forward(self, x):
         cache = []
         out = []
@@ -555,11 +555,11 @@ class MCnet(nn.Module):
             if block.from_ != -1:
                 x = cache[block.from_] if isinstance(block.from_, int) else [x if j == -1 else cache[j] for j in block.from_]       #calculate concat detect
             x = block(x)
-            if i in self.seg_out_idx:     #save driving area segment result
-                m=nn.Sigmoid()
-                out.append(m(x))
-            if i == self.detector_index:
-                det_out = x
+            # if i in self.seg_out_idx:     #save driving area segment result
+            #     m=nn.Sigmoid()
+            #     out.append(m(x))
+            # if i == self.detector_index:
+            #     det_out = x
             cache.append(x if block.index in self.save else None)
         out.insert(0,det_out)
         return out
