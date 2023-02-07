@@ -580,7 +580,13 @@ class MCnet(nn.Module):
             if i == 24:
                 # print(self.detector_index)
                 det_out = x
-            cache.append(x if block.index in self.save else None)
+                
+            if block.index in self.save:
+                x = x
+            else:
+                x = None
+            cache.append(x)
+            # cache.append(x if block.index in self.save else None)
         out.insert(0,det_out)
         return out
             
