@@ -555,8 +555,8 @@ class MCnet(nn.Module):
             if block.from_ != -1:
                 x = cache[block.from_] if isinstance(block.from_, int) else [x if j == -1 else cache[j] for j in block.from_]       #calculate concat detect
             x = block(x)
-            if i in self.seg_out_idx:     #save driving area segment result
-                print(self.seg_out_idx)
+            if i in [33, 42]: #self.seg_out_idx:     #save driving area segment result
+                # print(self.seg_out_idx)
                 m=nn.Sigmoid()
                 out.append(m(x))
             # if i == self.detector_index:
