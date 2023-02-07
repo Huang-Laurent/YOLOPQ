@@ -524,7 +524,7 @@ class MCnet(nn.Module):
         assert self.detector_index == block_cfg[0][0]
 
         self.model, self.save = nn.Sequential(*layers), sorted(save)
-        print(self.model)
+        # print(self.model)
         self.names = [str(i) for i in range(self.nc)]
 
         # set stride、anchor for detector
@@ -580,12 +580,13 @@ class MCnet(nn.Module):
             if i == 24:
                 # print(self.detector_index)
                 det_out = x
-                
+
             if block.index in self.save:
-                x = x
+                value = x
             else:
-                x = None
-            cache.append(x)
+                value = None
+            cache.append(value)
+            # cache.append(x)
             # cache.append(x if block.index in self.save else None)
         out.insert(0,det_out)
         return out
