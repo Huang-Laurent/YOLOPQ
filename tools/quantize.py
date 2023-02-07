@@ -59,53 +59,58 @@ def parse_args():
 
     return args
 
-args = parse_args()
-update_config(cfg, args)
+def main():
+    args = parse_args()
+    update_config(cfg, args)
 
 
-# logger, final_output_dir, tb_log_dir = create_logger(
-#     cfg, cfg.LOG_DIR, 'train', rank=rank)
-logger, final_output_dir, tb_log_dir = create_logger(
-    cfg, cfg.LOG_DIR, 'test')
+    # logger, final_output_dir, tb_log_dir = create_logger(
+    #     cfg, cfg.LOG_DIR, 'train', rank=rank)
+    logger, final_output_dir, tb_log_dir = create_logger(
+        cfg, cfg.LOG_DIR, 'test')
 
-logger.info(pprint.pformat(args))
-logger.info(cfg)
+    logger.info(pprint.pformat(args))
+    logger.info(cfg)
 
-writer_dict = {
-    'writer': SummaryWriter(log_dir=tb_log_dir),
-    'train_global_steps': 0,
-    'valid_global_steps': 0,
-}
+    writer_dict = {
+        'writer': SummaryWriter(log_dir=tb_log_dir),
+        'train_global_steps': 0,
+        'valid_global_steps': 0,
+    }
 
-print("begin to bulid up model...")
-# DP mode
-device = select_device(logger, batch_size=cfg.TEST.BATCH_SIZE_PER_GPU* len(cfg.GPUS)) if not cfg.DEBUG \
-    else select_device(logger, 'cpu')
-# device = select_device(logger, 'cpu')
+    print("begin to bulid up model...")
+    # DP mode
+    device = select_device(logger, batch_size=cfg.TEST.BATCH_SIZE_PER_GPU* len(cfg.GPUS)) if not cfg.DEBUG \
+        else select_device(logger, 'cpu')
+    # device = select_device(logger, 'cpu')
 
-model = get_net(cfg)
-print("build model 1/2")
+    model = get_net(cfg)
+    print("build model 1/2")
 
-# define loss function (criterion) and optimizer
-criterion = get_loss(cfg, device=device)
-optimizer = get_optimizer(cfg, model)
+    # define loss function (criterion) and optimizer
+    criterion = get_loss(cfg, device=device)
+    optimizer = get_optimizer(cfg, model)
 
-# load checkpoint model
-# det_idx_range = [str(i) for i in range(0,25)]
-model_dict = model.state_dict()
-# NOTE: Since 'weights' is a list, we need to read the element.
-checkpoint_file = args.weights[0]
-logger.info("=> loading checkpoint '{}'".format(checkpoint_file))
-# NOTE: Adaption for CPU execution.
-checkpoint = torch.load(checkpoint_file, map_location=torch.device('cpu'))
-checkpoint_dict = checkpoint['state_dict']
-model_dict.update(checkpoint_dict)
-model.load_state_dict(model_dict)
-logger.info("=> loaded checkpoint '{}' ".format(checkpoint_file))
+    # load checkpoint model
+    # det_idx_range = [str(i) for i in range(0,25)]
+    model_dict = model.state_dict()
+    # NOTE: Since 'weights' is a list, we need to read the element.
+    checkpoint_file = args.weights[0]
+    logger.info("=> loading checkpoint '{}'".format(checkpoint_file))
+    # NOTE: Adaption for CPU execution.
+    checkpoint = torch.load(checkpoint_file, map_location=torch.device('cpu'))
+    checkpoint_dict = checkpoint['state_dict']
+    model_dict.update(checkpoint_dict)
+    model.load_state_dict(model_dict)
+    logger.info("=> loaded checkpoint '{}' ".format(checkpoint_file))
 
-model = model.to(device)
+    model = model.to(device)
 
-model.gr = 1.0
-model.nc = 1
+    model.gr = 1.0
+    model.nc = 1
 
-print('bulid model 2/2')
+    print('bulid model 2/2')
+
+if __name__ == '__main__':
+    main()
+    
