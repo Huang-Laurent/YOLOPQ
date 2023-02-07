@@ -111,7 +111,13 @@ def main():
 
     print('bulid model 2/2')
 
-
+    print('prepare quantize model 1')
+    backend = BackendType.Tensorrt
+    model.eval()
+    print('prepare quantize model 2')
+    model = prepare_by_platform(model, backend)  
+    print('prepare quantize model 3')
+    enable_calibration(model) 
 
     print("begin to load data")
     # Data loading
@@ -168,7 +174,29 @@ def main():
                           t_inf=times[0], t_nms=times[1])
     logger.info(msg)
 
+    print('quantize model')
+    enable_quantization(model)
+    print('quantize model done')
 
+    print("\n----- EVALUATION OF POST-TRAINING QUANTIZED MODEL -----")
+
+    da_segment_results_ptq,ll_segment_results_ptq,detect_results_ptq,total_loss_ptq,maps_ptq,times_ptq = validate(
+        epoch, cfg, valid_loader, valid_dataset, model, criterion,
+        final_output_dir, tb_log_dir, writer_dict,
+        logger, device
+    )
+    fi_ptq  = fitness(np.array(detect_results_ptq).reshape(1, -1))
+    msg_ptq = 'Test:    Loss({loss:.3f})\n' \
+              'Driving area Segment: Acc({da_seg_acc:.3f})    IOU ({da_seg_iou:.3f})    mIOU({da_seg_miou:.3f})\n' \
+                      'Lane line Segment: Acc({ll_seg_acc:.3f})    IOU ({ll_seg_iou:.3f})  mIOU({ll_seg_miou:.3f})\n' \
+                      'Detect: P({p:.3f})  R({r:.3f})  mAP@0.5({map50:.3f})  mAP@0.5:0.95({map:.3f})\n'\
+                      'Time: inference({t_inf:.4f}s/frame)  nms({t_nms:.4f}s/frame)'.format(
+                          loss=total_loss_ptq, da_seg_acc=da_segment_results_ptq[0],da_seg_iou=da_segment_results_ptq[1],da_seg_miou=da_segment_results_ptq[2],
+                          ll_seg_acc=ll_segment_results_ptq[0],ll_seg_iou=ll_segment_results_ptq[1],ll_seg_miou=ll_segment_results_ptq[2],
+                          p=detect_results_ptq[0],r=detect_results_ptq[1],map50=detect_results_ptq[2],map=detect_results_ptq[3],
+                          t_inf=times_ptq[0], t_nms=times_ptq[1])
+    logger.info(msg_ptq)
+    print("test finish")
 
 if __name__ == '__main__':
     main()
