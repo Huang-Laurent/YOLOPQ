@@ -551,7 +551,6 @@ class MCnet(nn.Module):
         det_out = None
         Da_fmap = []
         LL_fmap = []
-        x
         for i, block in enumerate(self.model):
             # print(i, block)
             if block.from_ != -1:
