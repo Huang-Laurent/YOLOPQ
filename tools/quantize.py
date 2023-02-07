@@ -27,6 +27,7 @@ def parse_args():
     return args
 
 args = parse_args()
+update_config(cfg, args)
 
 print("begin to bulid up model...")
 # DP mode
