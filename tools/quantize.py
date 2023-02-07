@@ -1,5 +1,8 @@
-import torch
 import argparse
+import copy
+import os, sys
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
 
 from mqbench.prepare_by_platform import prepare_by_platform   # add quant nodes for specific Backend
 from mqbench.prepare_by_platform import BackendType           # contain various Backend, like TensorRT, NNIE, etc.
