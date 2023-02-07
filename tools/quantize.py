@@ -62,6 +62,21 @@ def parse_args():
 args = parse_args()
 update_config(cfg, args)
 
+
+# logger, final_output_dir, tb_log_dir = create_logger(
+#     cfg, cfg.LOG_DIR, 'train', rank=rank)
+logger, final_output_dir, tb_log_dir = create_logger(
+    cfg, cfg.LOG_DIR, 'test')
+
+logger.info(pprint.pformat(args))
+logger.info(cfg)
+
+writer_dict = {
+    'writer': SummaryWriter(log_dir=tb_log_dir),
+    'train_global_steps': 0,
+    'valid_global_steps': 0,
+}
+
 print("begin to bulid up model...")
 # DP mode
 device = select_device(logger, batch_size=cfg.TEST.BATCH_SIZE_PER_GPU* len(cfg.GPUS)) if not cfg.DEBUG \
