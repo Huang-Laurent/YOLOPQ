@@ -234,7 +234,7 @@ class Detect(nn.Module):
                 #     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
 
                 # self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
-                self.grid[i] = self._make_grid(80, 20).to(x[i].device)
+                self.grid[i] = self._make_grid(80, 48).to(x[i].device)
 
                 y = x[i].sigmoid()  # (bs,na,ny,nx,no=nc+5=4+1+nc)
 
