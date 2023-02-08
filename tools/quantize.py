@@ -89,7 +89,6 @@ def main():
     # device = select_device(logger, 'cpu')
 
     model = get_net(cfg)
-    model.eval()
     print("build model 1/2")
 
     # define loss function (criterion) and optimizer
@@ -116,18 +115,22 @@ def main():
 
     print('bulid model 2/2')
 
-    extra_qconfig_dict = {
-        'w_observer': 'MinMaxObserver',
-        'a_observer': 'EMAMinMaxObserver',
-        'w_fakequantize': 'FixedFakeQuantize',
-        'a_fakequantize': 'FixedFakeQuantize',
-    }
+    # extra_qconfig_dict = {
+    #     'w_observer': 'MinMaxObserver',
+    #     'a_observer': 'EMAMinMaxObserver',
+    #     'w_fakequantize': 'FixedFakeQuantize',
+    #     'a_fakequantize': 'FixedFakeQuantize',
+    # }
     
     # leaf_module = (Detect, Sigmoid, )
     # leaf_module = (Sigmoid, )
-    leaf_module = (ArangeForFx, )
-    prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict, 'leaf_module':leaf_module}
+    # leaf_module = (ArangeForFx, )
+    # prepare_custom_config_dict = {'leaf_module':leaf_module}
+    # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict, 'leaf_module':leaf_module}
     # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict}
+    exclude_module = ['Detect']
+    extra_quantizer_dict = {'exclude_module_name': exclude_module}
+    prepare_custom_config_dict = {'extra_quantizer_dict': extra_quantizer_dict}
     print('prepare quantize model 1')
     backend = BackendType.Tensorrt
     model.eval()

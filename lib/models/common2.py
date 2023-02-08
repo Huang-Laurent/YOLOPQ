@@ -199,6 +199,7 @@ class Detect(nn.Module):
         self.inplace = True  # use in-place ops (e.g. slice assignment)
         self.arange = ArangeForFx()
 
+        self.meshgrid = torch.meshgrid()
     # def forward(self, x):
     #     z = []  # inference output
     #     for i in range(self.nl):
@@ -304,6 +305,21 @@ class Detect(nn.Module):
 
         return x if self.training else (torch.cat(z, 1), x)
         # torch.cat(z, 1) (bs,na*ny*nx*nl,no=2+2+1+nc=xy+wh+conf+cls_prob)
+
+
+    # def _meshgrid(*tensors, indexing: Optional[str]):
+    #     if has_torch_function(tensors):
+    #         return handle_torch_function(meshgrid, tensors, *tensors, indexing=indexing)
+    #     if len(tensors) == 1 and isinstance(tensors[0], (list, tuple)):
+    #         # the old interface of passing the operands as one list argument
+    #         tensors = tensors[0]  # type: ignore[assignment]
+
+    # Continue allowing call of old method that takes no indexing
+    # kwarg for forward compatibility reasons.
+    #
+    # Remove this two weeks after landing.
+    # kwargs = {} if indexing is None else {'indexing': indexing}
+    # return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
 
     @staticmethod
     def _make_grid(nx=20, ny=20):
