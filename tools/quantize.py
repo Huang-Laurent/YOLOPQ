@@ -128,8 +128,8 @@ def main():
     # prepare_custom_config_dict = {'leaf_module':leaf_module}
     # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict, 'leaf_module':leaf_module}
     # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict}
-    exclude_module = ['common2.Detect']
-    extra_quantizer_dict = {'exclude_module_name': exclude_module}
+    exclude_module = [Detect]
+    extra_quantizer_dict = {'exclude_module_name': exclude_module}#, 'exclude_function_type': [operator.mul,]}
     prepare_custom_config_dict = {'extra_quantizer_dict': extra_quantizer_dict, 'leaf_module':leaf_module}
     print('prepare quantize model 1')
     backend = BackendType.Tensorrt
