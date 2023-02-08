@@ -108,7 +108,6 @@ def main():
     logger.info("=> loaded checkpoint '{}' ".format(checkpoint_file))
 
     model = model.to(device)
-
     model.gr = 1.0
     model.nc = 1
 
