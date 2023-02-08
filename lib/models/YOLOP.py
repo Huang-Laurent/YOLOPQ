@@ -572,12 +572,13 @@ class MCnet(nn.Module):
                     
                 # print(block.from_)
             x = block(x)
-            if i in [33, 42]: #self.seg_out_idx:     #save driving area segment result
+            # if i in [33, 42]: #self.seg_out_idx:     #save driving area segment result
+            if i in self.seg_out_idx:
                 # print(self.seg_out_idx)
                 m=nn.Sigmoid()
                 out.append(m(x))
-            # if i == self.detector_index:
-            if i == 24:
+            if i == self.detector_index:
+            # if i == 24:
                 # print(self.detector_index)
                 det_out = x
 
