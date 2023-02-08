@@ -293,8 +293,8 @@ class Detect(nn.Module):
                 #     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
 
                 # self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
-                arg1 = self.arange(ny).to(dtype=torch.long)#, device=ny.device)
-                arg2 = self.arange(nx).to(dtype=torch.long)#, device=ny.device)
+                arg1 = self.arange(ny)#.to(dtype=torch.long)#, device=ny.device)
+                arg2 = self.arange(nx)#.to(dtype=torch.long)#, device=ny.device)
                 yv, xv = torch.cartesian_prod(torch.Tensor[arg1, arg2])
                 self.grid[i] = torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float()
                 # self.grid[i] = self.arange(ny).to(dtype=torch.long, device=ny.device)
