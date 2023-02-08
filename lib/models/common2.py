@@ -231,12 +231,15 @@ class Detect(nn.Module):
             # x(bs,255,20,20) to x(bs,3,20,20,nc+5) (bs,na,ny,nx,no=nc+5=4+1+nc)
 
             x[i] = x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
-            print(type(ny), nx)
+
             if not self.training:  # inference
                 # if self.grid[i].shape[2:4] != x[i].shape[2:4] or self.onnx_dynamic:
                 #     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
 
-                self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
+                yv, xv = torch.meshgrid([torch.arange(ny), torch.arange(nx)])
+                self.grid[i] = torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float().to(x[i].device)
+
+                # self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
                 # self.grid[i] = self._make_grid(, 48).to(x[i].device)
 
                 y = x[i].sigmoid()  # (bs,na,ny,nx,no=nc+5=4+1+nc)
