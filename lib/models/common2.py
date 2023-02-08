@@ -226,7 +226,7 @@ class Detect(nn.Module):
             bs, _, ny, nx = x[i].shape
             # print(type(ny), nx)
             # workaround_ny = x.new_ones(ny).cumsum(0) - 1
-            xt = torch.FloatTensor(x)
+            xt = torch.Tensor(x[i])
             workaround_nx = x.new_ones(nx).cumsum(0) - 1
             workaround_ny = x.new_ones(ny).cumsum(0) - 1
 
