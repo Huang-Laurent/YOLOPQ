@@ -118,8 +118,8 @@ def main():
     extra_qconfig_dict = {
         'w_observer': 'MinMaxObserver',
         'a_observer': 'EMAMinMaxObserver',
-        'w_fakequantize': 'FixedFakeQuantize',
-        'a_fakequantize': 'FixedFakeQuantize',
+        # 'w_fakequantize': 'FixedFakeQuantize',
+        # 'a_fakequantize': 'FixedFakeQuantize',
     }
     
     # leaf_module = (Detect, Sigmoid, )
