@@ -224,12 +224,12 @@ class Detect(nn.Module):
         for i in range(self.nl):
             x[i] = self.m[i](x[i])  # conv (bs,na*no,ny,nx)
             bs, _, ny, nx = x[i].shape
-            print(type(x[i]))
+            # print(type(x[i]))
             # print(type(ny), nx)
             # workaround_ny = x.new_ones(ny).cumsum(0) - 1
-            xt = torch.Tensor(x[i])
-            workaround_nx = xt.new_ones(nx).cumsum(0) - 1
-            workaround_ny = xt.new_ones(ny).cumsum(0) - 1
+            # xt = torch.Tensor(x[i])
+            workaround_nx = x[i].new_ones(nx).cumsum(0) - 1
+            workaround_ny = x[i].new_ones(ny).cumsum(0) - 1
 
             # x(bs,255,20,20) to x(bs,3,20,20,nc+5) (bs,na,ny,nx,no=nc+5=4+1+nc)
 
