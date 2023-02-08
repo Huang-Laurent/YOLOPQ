@@ -128,7 +128,7 @@ def main():
     backend = BackendType.Tensorrt
     model.eval()
     print('prepare quantize model 2')
-    model = prepare_by_platform(model, backend)#, prepare_custom_config_dict)  
+    model = prepare_by_platform(model, backend, prepare_custom_config_dict)  
     print('prepare quantize model 3')
     enable_calibration(model) 
 
