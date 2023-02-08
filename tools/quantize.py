@@ -103,8 +103,8 @@ def main():
     checkpoint_file = args.weights[0]
     logger.info("=> loading checkpoint '{}'".format(checkpoint_file))
     # NOTE: Adaption for CPU execution.
-    checkpoint = torch.load(checkpoint_file, map_location=torch.device('cuda'))
-    # checkpoint = torch.load(checkpoint_file, map_location=torch.device('cpu'))
+    # checkpoint = torch.load(checkpoint_file, map_location=torch.device('cuda'))
+    checkpoint = torch.load(checkpoint_file, map_location=torch.device('cpu'))
     checkpoint_dict = checkpoint['state_dict']
     model_dict.update(checkpoint_dict)
     model.load_state_dict(model_dict)
@@ -125,7 +125,7 @@ def main():
     
     # leaf_module = (Detect, Sigmoid, )
     # leaf_module = (Sigmoid, )
-    leaf_module = (ArangeForFx, )
+    leaf_module = (ArangeForFx, Detect)
     # prepare_custom_config_dict = {'leaf_module':leaf_module}
     # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict, 'leaf_module':leaf_module}
     # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict}
