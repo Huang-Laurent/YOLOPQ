@@ -42,6 +42,7 @@ from mqbench.convert_deploy import convert_deploy             # remove quant nod
 
 from lib.models.common2 import Detect
 from torch.nn import Sigmoid
+from lib.models.common2 import ArangeForFx
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Test Multitask network')
@@ -123,8 +124,9 @@ def main():
     
     # leaf_module = (Detect, Sigmoid, )
     # leaf_module = (Sigmoid, )
-    # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict, 'leaf_module':leaf_module}
-    prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict}
+    leaf_module = (ArangeForFx, )
+    prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict, 'leaf_module':leaf_module}
+    # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict}
     print('prepare quantize model 1')
     backend = BackendType.Tensorrt
     model.eval()
