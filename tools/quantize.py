@@ -184,7 +184,7 @@ def main():
     print("\n----- EVALUATION OF A NON COMPRESSED MODEL -----")
 
     epoch = 0 #special for test
-    da_segment_results,ll_segment_results,detect_results, total_loss,maps, times = validate(
+    da_segment_results,ll_segment_results,detect_results, total_loss,maps, times = train(
         epoch,cfg, valid_loader, valid_dataset, model, criterion,
         final_output_dir, tb_log_dir, writer_dict,
         logger, device
