@@ -19,7 +19,10 @@ import lib.dataset as dataset
 from lib.config import cfg
 from lib.config import update_config
 from lib.core.loss import get_loss
+
 from lib.core.function import validate
+from lib.core.function import train
+
 from lib.core.general import fitness
 from lib.models import get_net
 from lib.utils.utils import create_logger, select_device
@@ -130,7 +133,7 @@ def main():
     print('load data finished')
 
     epoch = 0 #special for test
-    da_segment_results,ll_segment_results,detect_results, total_loss,maps, times = validate(
+    da_segment_results,ll_segment_results,detect_results, total_loss,maps, times = train(# validate(
         epoch,cfg, valid_loader, valid_dataset, model, criterion,
         final_output_dir, tb_log_dir, writer_dict,
         logger, device

@@ -133,18 +133,18 @@ def main():
     #extra_quantizer_dict = {'exclude_node_name': [Detect], 'exclude_module_name': exclude_module, 'exclude_function_type': [Detect.forward,]}#, 'exclude_function_type': [operator.mul,]}
     extra_quantizer_dict = {'exclude_function_type': [torch.meshgrid]}
     prepare_custom_config_dict = {'extra_quantizer_dict': extra_quantizer_dict, 'leaf_module':leaf_module}
-    print('prepare quantize model 1')
+    print('prepare quantize model 1/4')
     backend = BackendType.Tensorrt
     model.eval()
-    print('prepare quantize model 2')
+    print('prepare quantize model 2/4')
     model = prepare_by_platform(model, backend, prepare_custom_config_dict)  
-    print('prepare quantize model 3')
+    print('prepare quantize model 3/4')
     enable_calibration(model) 
+    print('model preparation complete')
 
-
-    print('quantize model')
-    enable_quantization(model)
-    print('quantize model done')
+    # print('quantize model')
+    # enable_quantization(model)
+    # print('quantize model done')
 
     print("begin to load data")
     # Data loading
