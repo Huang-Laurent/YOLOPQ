@@ -178,6 +178,9 @@ class Concat(nn.Module):
             print(f.shape) """
         return torch.cat(x, self.d)
 
+class ArangeForFx(torch.nn.Module):
+    def forward(self, x):
+        return torch.arange(x)
 
 class Detect(nn.Module):
     stride = None  # strides computed during build
@@ -194,6 +197,7 @@ class Detect(nn.Module):
         self.register_buffer('anchor_grid', a.clone().view(self.nl, 1, -1, 1, 1, 2))  # shape(nl=3,1,na=3,1,1,2)
         self.m = nn.ModuleList(nn.Conv2d(x, self.no * self.na, 1) for x in ch)  # output conv
         self.inplace = True  # use in-place ops (e.g. slice assignment)
+        self.arange = ArangeForFx()
 
     # def forward(self, x):
     #     z = []  # inference output
@@ -300,7 +304,10 @@ class Detect(nn.Module):
     @staticmethod
     def _make_grid(nx=20, ny=20):
 
-        yv, xv = torch.meshgrid([torch.arange(ny), torch.arange(nx)])
+        # yv, xv = torch.meshgrid([torch.arange(ny), torch.arange(nx)])
+        arg1 = ArangeForFx(ny).to(dtype=torch.long, device=ny.device)
+        arg2 = ArangeForFx(nx).to(dtype=torch.long, device=ny.device)
+        yv, xv = torch.meshgrid([arg1, arg2])
         return torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float()
 
 
