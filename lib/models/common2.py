@@ -224,7 +224,7 @@ class Detect(nn.Module):
         for i in range(self.nl):
             x[i] = self.m[i](x[i])  # conv (bs,na*no,ny,nx)
             bs, _, ny, nx = x[i].shape
-            print(ny, nx)
+            print(type(ny), nx)
             # workaround_ny = x.new_ones(ny).cumsum(0) - 1
             # workaround_nx = x.new_ones(nx).cumsum(0) - 1
 
