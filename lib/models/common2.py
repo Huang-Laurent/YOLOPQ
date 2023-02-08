@@ -224,14 +224,14 @@ class Detect(nn.Module):
         for i in range(self.nl):
             x[i] = self.m[i](x[i])  # conv (bs,na*no,ny,nx)
             bs, _, ny, nx = x[i].shape
-            print(type(ny), nx)
+            # print(type(ny), nx)
             # workaround_ny = x.new_ones(ny).cumsum(0) - 1
             # workaround_nx = x.new_ones(nx).cumsum(0) - 1
 
             # x(bs,255,20,20) to x(bs,3,20,20,nc+5) (bs,na,ny,nx,no=nc+5=4+1+nc)
 
             x[i] = x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
-
+            print(type(ny), nx)
             if not self.training:  # inference
                 # if self.grid[i].shape[2:4] != x[i].shape[2:4] or self.onnx_dynamic:
                 #     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
