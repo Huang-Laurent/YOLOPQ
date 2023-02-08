@@ -170,7 +170,7 @@ def main():
 
     epoch = 0 #special for test
     da_segment_results,ll_segment_results,detect_results, total_loss,maps, times = validate(
-        epoch,cfg, valid_loader, valid_dataset, model, criterion,
+        epoch,cfg, valid_loader, valid_dataset, model.to(device), criterion,
         final_output_dir, tb_log_dir, writer_dict,
         logger, device
     )
