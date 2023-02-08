@@ -113,8 +113,15 @@ def main():
 
     print('bulid model 2/2')
 
+    extra_qconfig_dict = {
+        'w_observer': 'MinMaxObserver',
+        'a_observer': 'EMAMinMaxObserver',
+        'w_fakequantize': 'FixedFakeQuantize',
+        'a_fakequantize': 'FixedFakeQuantize',
+    }
+    
     leaf_module = (Detect,)
-    prepare_custom_config_dict = {'leaf_module':leaf_module}
+    prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict, 'leaf_module':leaf_module}
     print('prepare quantize model 1')
     backend = BackendType.Tensorrt
     model.eval()
