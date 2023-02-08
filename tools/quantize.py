@@ -85,9 +85,9 @@ def main():
 
     print("begin to bulid up model...")
     # DP mode
-    device = select_device(logger, batch_size=cfg.TEST.BATCH_SIZE_PER_GPU* len(cfg.GPUS)) if not cfg.DEBUG \
-        else select_device(logger, 'cpu')
-    # device = select_device(logger, 'cpu')
+    # device = select_device(logger, batch_size=cfg.TEST.BATCH_SIZE_PER_GPU* len(cfg.GPUS)) if not cfg.DEBUG \
+    #     else select_device(logger, 'cpu')
+    device = select_device(logger, 'cpu')
 
     model = get_net(cfg)
     print("build model 1/2")
@@ -103,8 +103,8 @@ def main():
     checkpoint_file = args.weights[0]
     logger.info("=> loading checkpoint '{}'".format(checkpoint_file))
     # NOTE: Adaption for CPU execution.
-    checkpoint = torch.load(checkpoint_file, map_location=torch.device('cuda'))
-    # checkpoint = torch.load(checkpoint_file, map_location=torch.device('cpu'))
+    # checkpoint = torch.load(checkpoint_file, map_location=torch.device('cuda'))
+    checkpoint = torch.load(checkpoint_file, map_location=torch.device('cpu'))
     checkpoint_dict = checkpoint['state_dict']
     model_dict.update(checkpoint_dict)
     model.load_state_dict(model_dict)
