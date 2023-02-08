@@ -43,6 +43,7 @@ from mqbench.convert_deploy import convert_deploy             # remove quant nod
 from lib.models.common2 import Detect
 from torch.nn import Sigmoid
 from lib.models.common2 import ArangeForFx
+from lib.models import common2
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Test Multitask network')
@@ -128,7 +129,7 @@ def main():
     # prepare_custom_config_dict = {'leaf_module':leaf_module}
     # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict, 'leaf_module':leaf_module}
     # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict}
-    exclude_module = ['Detect']
+    exclude_module = [common2]
     
     extra_quantizer_dict = {'exclude_module_name': exclude_module, 'exclude_function_type': [Detect.forward,]}#, 'exclude_function_type': [operator.mul,]}
     prepare_custom_config_dict = {'extra_quantizer_dict': extra_quantizer_dict, 'leaf_module':leaf_module}
