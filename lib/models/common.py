@@ -196,9 +196,10 @@ class Detect(nn.Module):
             # print(str(i)+str(x[i].shape))
 
             if not self.training:  # inference
-                shape = x[i].shape[2:4]
-                if self.grid[i].shape[2:4] != shape:
-                # if self.grid[i].shape[2:4] != x[i].shape[2:4]:
+                # shape = x[i].shape[2:4]
+                # if self.grid[i].shape[2:4] != shape:
+                print(x[i].shape[2:4])
+                if self.grid[i].shape[2:4] != x[i].shape[2:4]:
                     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
                 y = x[i].sigmoid()
                 #print("**")
