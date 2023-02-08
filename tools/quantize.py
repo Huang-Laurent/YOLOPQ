@@ -111,6 +111,7 @@ def main():
 
     print('bulid model 2/2')
 
+    leaf_module = (Detect,)
     print('prepare quantize model 1')
     backend = BackendType.Tensorrt
     model.eval()
