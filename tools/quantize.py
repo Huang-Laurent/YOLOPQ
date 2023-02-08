@@ -180,11 +180,26 @@ def main():
     )
     print('load data finished')
 
+    train_loader = DataLoaderX(
+        train_dataset,
+        batch_size=cfg.TRAIN.BATCH_SIZE_PER_GPU * len(cfg.GPUS),
+        shuffle=(cfg.TRAIN.SHUFFLE & rank == -1),
+        num_workers=cfg.WORKERS,
+        sampler=train_sampler,
+        pin_memory=cfg.PIN_MEMORY,
+        collate_fn=dataset.AutoDriveDataset.collate_fn
+    )
+    scaler = amp.GradScaler(enabled=device.type != 'cpu')
+    num_batch = len(train_loader)
+    num_warmup = max(round(cfg.TRAIN.WARMUP_EPOCHS * num_batch), 1000)
+    global_rank = int(os.environ['RANK']) if 'RANK' in os.environ else -1
+    rank = global_rank
     ### Evaluate the original model.
     print("\n----- EVALUATION OF A NON COMPRESSED MODEL -----")
-
+    train(cfg, train_loader, model, criterion, optimizer, scaler,
+        epoch, num_batch, num_warmup, writer_dict, logger, device, rank)
     epoch = 0 #special for test
-    da_segment_results,ll_segment_results,detect_results, total_loss,maps, times = train(
+    da_segment_results,ll_segment_results,detect_results, total_loss,maps, times = validate(
         epoch,cfg, valid_loader, valid_dataset, model, criterion,
         final_output_dir, tb_log_dir, writer_dict,
         logger, device
