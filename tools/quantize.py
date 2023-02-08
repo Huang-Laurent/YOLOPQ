@@ -111,13 +111,13 @@ def main():
 
     print('bulid model 2/2')
 
-    print('prepare quantize model 1')
-    backend = BackendType.Tensorrt
-    model.eval()
-    print('prepare quantize model 2')
-    model = prepare_by_platform(model, backend)  
-    print('prepare quantize model 3')
-    enable_calibration(model) 
+    # print('prepare quantize model 1')
+    # backend = BackendType.Tensorrt
+    # model.eval()
+    # print('prepare quantize model 2')
+    # model = prepare_by_platform(model, backend)  
+    # print('prepare quantize model 3')
+    # enable_calibration(model) 
 
     print("begin to load data")
     # Data loading
