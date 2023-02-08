@@ -40,7 +40,7 @@ from mqbench.utils.state import enable_calibration            # turn on calibrat
 from mqbench.utils.state import enable_quantization           # turn on actually quantization, like FP32 -> INT8
 from mqbench.convert_deploy import convert_deploy             # remove quant nodes for deploy
 
-from lib.models.common import Detect
+from lib.models.common2 import Detect
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Test Multitask network')
@@ -120,13 +120,13 @@ def main():
         'a_fakequantize': 'FixedFakeQuantize',
     }
     
-    leaf_module = (Detect,)
-    prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict, 'leaf_module':leaf_module}
+    # leaf_module = (Detect,)
+    # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict}# , 'leaf_module':leaf_module}
     print('prepare quantize model 1')
     backend = BackendType.Tensorrt
     model.eval()
     print('prepare quantize model 2')
-    model = prepare_by_platform(model, backend, prepare_custom_config_dict)  
+    model = prepare_by_platform(model, backend)#, prepare_custom_config_dict)  
     print('prepare quantize model 3')
     enable_calibration(model) 
 
