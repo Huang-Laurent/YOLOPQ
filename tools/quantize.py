@@ -190,6 +190,8 @@ def main():
             normalize,
         ])
     )
+    global_rank = int(os.environ['RANK']) if 'RANK' in os.environ else -1
+    rank = global_rank
     train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset) if rank != -1 else None
     train_loader = DataLoaderX(
         train_dataset,
@@ -203,8 +205,7 @@ def main():
     scaler = amp.GradScaler(enabled=device.type != 'cpu')
     num_batch = len(train_loader)
     num_warmup = max(round(cfg.TRAIN.WARMUP_EPOCHS * num_batch), 1000)
-    global_rank = int(os.environ['RANK']) if 'RANK' in os.environ else -1
-    rank = global_rank
+
 
 
     ### Evaluate the original model.
