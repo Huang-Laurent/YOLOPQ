@@ -210,6 +210,7 @@ def main():
 
     ### Evaluate the original model.
     print("\n----- EVALUATION OF A NON COMPRESSED MODEL -----")
+    epoch = 1
     train(cfg, train_loader, model, criterion, optimizer, scaler,
         epoch, num_batch, num_warmup, writer_dict, logger, device, rank)
     epoch = 0 #special for test
