@@ -575,8 +575,12 @@ class MCnet(nn.Module):
             # if i in [33, 42]: #self.seg_out_idx:     #save driving area segment result
             if i in self.seg_out_idx:
                 # print(self.seg_out_idx)
-                m=nn.Sigmoid()
-                out.append(m(x))
+
+                # m= nn.Sigmoid()
+                self.up = nn.Sigmoid()
+                out.append(self.up(x))
+                # out.append(m(x))
+
             if i == self.detector_index:
             # if i == 24:
                 # print(self.detector_index)
