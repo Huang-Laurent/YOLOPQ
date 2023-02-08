@@ -200,7 +200,7 @@ class Detect(nn.Module):
         self.arange = ArangeForFx()
 
         #self.meshgrid = torch.meshgrid()
-        
+
     # def forward(self, x):
     #     z = []  # inference output
     #     for i in range(self.nl):
@@ -225,57 +225,57 @@ class Detect(nn.Module):
     #             z.append(y.view(bs, -1, self.no))
     #     return x if self.training else (torch.cat(z, 1), x)
 
-    def forward(self, x):
-        z = []  # inference output
-        for i in range(self.nl):
-            x[i] = self.m[i](x[i])  # conv (bs,na*no,ny,nx)
+    # def forward(self, x):
+    #     z = []  # inference output
+    #     for i in range(self.nl):
+    #         x[i] = self.m[i](x[i])  # conv (bs,na*no,ny,nx)
 
-            bs, _, ny, nx = x[i].shape
-            # print(type(x[i]))
-            # print(type(ny), nx)
-            # workaround_ny = x.new_ones(ny).cumsum(0) - 1
-            # xt = torch.Tensor(x[i])
-            # workaround_nx = x[i].new_ones(nx).cumsum(0) - 1
-            # workaround_ny = x[i].new_ones(ny).cumsum(0) - 1
+    #         bs, _, ny, nx = x[i].shape
+    #         # print(type(x[i]))
+    #         # print(type(ny), nx)
+    #         # workaround_ny = x.new_ones(ny).cumsum(0) - 1
+    #         # xt = torch.Tensor(x[i])
+    #         # workaround_nx = x[i].new_ones(nx).cumsum(0) - 1
+    #         # workaround_ny = x[i].new_ones(ny).cumsum(0) - 1
 
-            # x(bs,255,20,20) to x(bs,3,20,20,nc+5) (bs,na,ny,nx,no=nc+5=4+1+nc)
+    #         # x(bs,255,20,20) to x(bs,3,20,20,nc+5) (bs,na,ny,nx,no=nc+5=4+1+nc)
 
-            x[i] = x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
+    #         x[i] = x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
 
-        #     if not self.training:  # inference
-        #         # if self.grid[i].shape[2:4] != x[i].shape[2:4] or self.onnx_dynamic:
-        #         #     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
-        #         # t1 = torch.arange(ny)
-        #         # t2 = torch.arange(nx)
-        #         # t2 = workaround_nx
-        #         # t1 = workaround_ny
-        #         # range_ = []
-        #         # for i in range(nx):
-        #         #     range_.append(i)
-        #         # t2 = torch.tensor(range_, dtype=torch.float32)
+    #     #     if not self.training:  # inference
+    #     #         # if self.grid[i].shape[2:4] != x[i].shape[2:4] or self.onnx_dynamic:
+    #     #         #     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
+    #     #         # t1 = torch.arange(ny)
+    #     #         # t2 = torch.arange(nx)
+    #     #         # t2 = workaround_nx
+    #     #         # t1 = workaround_ny
+    #     #         # range_ = []
+    #     #         # for i in range(nx):
+    #     #         #     range_.append(i)
+    #     #         # t2 = torch.tensor(range_, dtype=torch.float32)
 
-        #         # range_ = []
-        #         # for i in range(ny):
-        #         #     range_.append(i)
-        #         # t1 = torch.tensor(range_, dtype=torch.float32)
-        #         # # t1 = torch.linspace(0, ny - 1, num=ny)
-        #         # # t2 = torch.linspace(0, nx - 1, num=nx)
-        #         # tsrtp = [t1, t2]
-        #         # yv, xv = torch.meshgrid(tsrtp)
-        #         # self.grid[i] = torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float().to(x[i].device)
+    #     #         # range_ = []
+    #     #         # for i in range(ny):
+    #     #         #     range_.append(i)
+    #     #         # t1 = torch.tensor(range_, dtype=torch.float32)
+    #     #         # # t1 = torch.linspace(0, ny - 1, num=ny)
+    #     #         # # t2 = torch.linspace(0, nx - 1, num=nx)
+    #     #         # tsrtp = [t1, t2]
+    #     #         # yv, xv = torch.meshgrid(tsrtp)
+    #     #         # self.grid[i] = torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float().to(x[i].device)
 
-        #         self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
-        #         # self.grid[i] = self._make_grid(, 48).to(x[i].device)
+    #     #         self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
+    #     #         # self.grid[i] = self._make_grid(, 48).to(x[i].device)
 
-        #         y = x[i].sigmoid()  # (bs,na,ny,nx,no=nc+5=4+1+nc)
+    #     #         y = x[i].sigmoid()  # (bs,na,ny,nx,no=nc+5=4+1+nc)
 
-        #         xy = (y[..., 0:2] * 2. - 0.5 + self.grid[i]) * self.stride[i]  # xy (bs,na,ny,nx,2)
-        #         wh = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i].view(1, self.na, 1, 1, 2)  # wh (bs,na,ny,nx,2)
-        #         y = torch.cat((xy, wh, y[..., 4:]), -1) # (bs,na,ny,nx,2+2+1+nc=xy+wh+conf+cls_prob)
+    #     #         xy = (y[..., 0:2] * 2. - 0.5 + self.grid[i]) * self.stride[i]  # xy (bs,na,ny,nx,2)
+    #     #         wh = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i].view(1, self.na, 1, 1, 2)  # wh (bs,na,ny,nx,2)
+    #     #         y = torch.cat((xy, wh, y[..., 4:]), -1) # (bs,na,ny,nx,2+2+1+nc=xy+wh+conf+cls_prob)
 
-        #         z.append(y.view(bs, -1, self.no))  # y (bs,na*ny*nx,no=2+2+1+nc=xy+wh+conf+cls_prob)
+    #     #         z.append(y.view(bs, -1, self.no))  # y (bs,na*ny*nx,no=2+2+1+nc=xy+wh+conf+cls_prob)
 
-        # return x if self.training else (torch.cat(z, 1), x)
+    #     # return x if self.training else (torch.cat(z, 1), x)
     def forward(self, x):
         z = []  # inference output
         for i in range(self.nl):
