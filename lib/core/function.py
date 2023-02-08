@@ -121,7 +121,7 @@ def validate(epoch,config, val_loader, val_dataset, model, criterion, output_dir
     - config: configurations 
     - train_loader: loder for data
     - model: 
-    - criterion: (function) calculate all the loss, return 
+    - lidatecriterion: (function) calculate all the loss, return 
     - writer_dict: 
 
     Return:
@@ -202,7 +202,7 @@ def validate(epoch,config, val_loader, val_dataset, model, criterion, output_dir
             ratio = shapes[0][1][0][0]
 
             t = time_synchronized()
-            det_out, da_seg_out, ll_seg_out= model(img)
+            det_out, da_seg_out, ll_seg_out = model(img.to(device))
             t_inf = time_synchronized() - t
             if batch_i > 0:
                 T_inf.update(t_inf/img.size(0),img.size(0))
