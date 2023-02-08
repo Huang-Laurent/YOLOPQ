@@ -125,13 +125,13 @@ def main():
     
     # leaf_module = (Detect, Sigmoid, )
     # leaf_module = (Sigmoid, )
-    leaf_module = (ArangeForFx, Detect)
+    leaf_module = (ArangeForFx, Detect,)
     # prepare_custom_config_dict = {'leaf_module':leaf_module}
     # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict, 'leaf_module':leaf_module}
     # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict}
-    exclude_module = [Detect]
+    exclude_module = [Detect,]
     #extra_quantizer_dict = {'exclude_node_name': [Detect], 'exclude_module_name': exclude_module, 'exclude_function_type': [Detect.forward,]}#, 'exclude_function_type': [operator.mul,]}
-    extra_quantizer_dict = {'exclude_function_type': [torch.meshgrid], 'exclude_module_name': exclude_module}
+    extra_quantizer_dict = {'exclude_function_type': [torch.meshgrid,], 'exclude_module_name': exclude_module}
     prepare_custom_config_dict = {'extra_quantizer_dict': extra_quantizer_dict, 'leaf_module':leaf_module}
     print('prepare quantize model 1/4')
     backend = BackendType.Tensorrt
