@@ -350,8 +350,8 @@ class Detect(nn.Module):
     def _make_grid(nx=20, ny=20):
         # yv, xv = torch.meshgrid([torch.arange(ny), torch.arange(nx)])
         arangefx = ArangeForFx()
-        arg1 = arangefx.forward(ny).to(dtype=torch.long, device=ny.device)
-        arg2 = arangefx.forward(nx).to(dtype=torch.long, device=ny.device)
+        arg1 = arangefx.forward(ny).to(dtype=torch.long)#, device=ny.device)
+        arg2 = arangefx.forward(nx).to(dtype=torch.long)#, device=ny.device)
         # yv, xv = torch.meshgrid([arg1, arg2])
         yv, xv = torch.cartesian_prod([arg1, arg2])
         return torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float()
