@@ -545,6 +545,8 @@ class MCnet(nn.Module):
             Detector.anchors /= Detector.stride.view(-1, 1, 1)  # Set the anchors for the corresponding scale
             check_anchor_order(Detector)
             self.stride = Detector.stride
+
+            print('biases init')
             self._initialize_biases()
         
         initialize_weights(self)
