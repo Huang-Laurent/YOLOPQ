@@ -199,7 +199,8 @@ class Detect(nn.Module):
         self.inplace = True  # use in-place ops (e.g. slice assignment)
         self.arange = ArangeForFx()
 
-        self.meshgrid = torch.meshgrid()
+        #self.meshgrid = torch.meshgrid()
+        
     # def forward(self, x):
     #     z = []  # inference output
     #     for i in range(self.nl):
