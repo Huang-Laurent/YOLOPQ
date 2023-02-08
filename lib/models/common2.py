@@ -303,10 +303,9 @@ class Detect(nn.Module):
 
     @staticmethod
     def _make_grid(nx=20, ny=20):
-
         # yv, xv = torch.meshgrid([torch.arange(ny), torch.arange(nx)])
-        arg1 = ArangeForFx(ny).to(dtype=torch.long)
-        arg2 = ArangeForFx(nx).to(dtype=torch.long)
+        arg1 = ArangeForFx(ny)#.to(dtype=torch.long, device=ny.device)
+        arg2 = ArangeForFx(nx)#.to(dtype=torch.long, device=ny.device)
         yv, xv = torch.meshgrid([arg1, arg2])
         return torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float()
 
