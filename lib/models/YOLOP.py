@@ -580,7 +580,7 @@ class MCnet(nn.Module):
             if i in self.seg_out_idx:
                 # print(self.seg_out_idx)
 
-                # m= nn.Sigmoid()
+                # m = nn.Sigmoid()
                 out.append(self.up(x))
                 # out.append(m(x))
 
