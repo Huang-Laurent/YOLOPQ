@@ -224,8 +224,9 @@ class Detect(nn.Module):
         for i in range(self.nl):
             x[i] = self.m[i](x[i])  # conv (bs,na*no,ny,nx)
             bs, _, ny, nx = x[i].shape
-            workaround_ny = x.new_ones(ny).cumsum(0) - 1
-            workaround_nx = x.new_ones(nx).cumsum(0) - 1
+            print(ny, nx)
+            # workaround_ny = x.new_ones(ny).cumsum(0) - 1
+            # workaround_nx = x.new_ones(nx).cumsum(0) - 1
 
             # x(bs,255,20,20) to x(bs,3,20,20,nc+5) (bs,na,ny,nx,no=nc+5=4+1+nc)
 
