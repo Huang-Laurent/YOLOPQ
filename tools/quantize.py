@@ -180,6 +180,17 @@ def main():
     )
     print('load data finished')
 
+
+    train_dataset = eval('dataset.' + cfg.DATASET.DATASET)(
+        cfg=cfg,
+        is_train=True,
+        inputsize=cfg.MODEL.IMAGE_SIZE,
+        transform=transforms.Compose([
+            transforms.ToTensor(),
+            normalize,
+        ])
+    )
+    train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset) if rank != -1 else None
     train_loader = DataLoaderX(
         train_dataset,
         batch_size=cfg.TRAIN.BATCH_SIZE_PER_GPU * len(cfg.GPUS),
@@ -194,6 +205,8 @@ def main():
     num_warmup = max(round(cfg.TRAIN.WARMUP_EPOCHS * num_batch), 1000)
     global_rank = int(os.environ['RANK']) if 'RANK' in os.environ else -1
     rank = global_rank
+
+
     ### Evaluate the original model.
     print("\n----- EVALUATION OF A NON COMPRESSED MODEL -----")
     train(cfg, train_loader, model, criterion, optimizer, scaler,
