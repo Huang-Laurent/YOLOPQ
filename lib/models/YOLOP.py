@@ -510,7 +510,8 @@ class MCnet(nn.Module):
         self.detector_index = -1
         self.det_out_idx = block_cfg[0][0]
         self.seg_out_idx = block_cfg[0][1:]
-        
+
+        self.up = nn.Sigmoid()
 
         # Build model
         for i, (from_, block, args) in enumerate(block_cfg[1:]):
@@ -577,7 +578,6 @@ class MCnet(nn.Module):
                 # print(self.seg_out_idx)
 
                 # m= nn.Sigmoid()
-                self.up = nn.Sigmoid()
                 out.append(self.up(x))
                 # out.append(m(x))
 
