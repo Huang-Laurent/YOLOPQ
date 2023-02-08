@@ -199,8 +199,9 @@ class Detect(nn.Module):
                 # shape = x[i].shape[2:4]
                 # if self.grid[i].shape[2:4] != shape:
                 # print("x[i].shape[2:4] = ", x[i].shape[2:4])
+
                 #if self.grid[i].shape[2:4] != x[i].shape[2:4]:
-                self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
+                # self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
                 y = x[i].sigmoid()
                 #print("**")
                 #print(y.shape) #[1, 3, w, h, 85]
