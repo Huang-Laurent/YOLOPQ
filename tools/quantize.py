@@ -40,7 +40,7 @@ from mqbench.utils.state import enable_calibration            # turn on calibrat
 from mqbench.utils.state import enable_quantization           # turn on actually quantization, like FP32 -> INT8
 from mqbench.convert_deploy import convert_deploy             # remove quant nodes for deploy
 
-from mqbench.common import Detect
+from models.common import Detect
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Test Multitask network')
