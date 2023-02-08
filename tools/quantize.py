@@ -41,6 +41,7 @@ from mqbench.utils.state import enable_quantization           # turn on actually
 from mqbench.convert_deploy import convert_deploy             # remove quant nodes for deploy
 
 from lib.models.common2 import Detect
+from torch.nn import Sigmoid
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Test Multitask network')
@@ -120,8 +121,9 @@ def main():
         'a_fakequantize': 'FixedFakeQuantize',
     }
     
-    # leaf_module = (Detect,)
-    # prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict}# , 'leaf_module':leaf_module}
+    # leaf_module = (Detect, Sigmoid, )
+    leaf_module = (Sigmoid, )
+    prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict}# , 'leaf_module':leaf_module}
     print('prepare quantize model 1')
     backend = BackendType.Tensorrt
     model.eval()
