@@ -233,7 +233,8 @@ class Detect(nn.Module):
                 # if self.grid[i].shape[2:4] != x[i].shape[2:4] or self.onnx_dynamic:
                 #     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
 
-                self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
+                # self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
+                self.grid[i] = self._make_grid(20, 20).to(x[i].device)
 
                 y = x[i].sigmoid()  # (bs,na,ny,nx,no=nc+5=4+1+nc)
 
@@ -249,7 +250,7 @@ class Detect(nn.Module):
     @staticmethod
     def _make_grid(nx=20, ny=20):
 
-        yv, xv = torch.meshgrid([torch.arange(int(ny)), torch.arange(int(nx))])
+        yv, xv = torch.meshgrid([torch.arange(ny), torch.arange(nx)])
         return torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float()
 
 
