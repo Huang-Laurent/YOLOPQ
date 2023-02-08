@@ -123,7 +123,7 @@ def main():
     
     # leaf_module = (Detect, Sigmoid, )
     leaf_module = (Sigmoid, )
-    prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict}# , 'leaf_module':leaf_module}
+    prepare_custom_config_dict = {'extra_qconfig_dict': extra_qconfig_dict, 'leaf_module':leaf_module}
     print('prepare quantize model 1')
     backend = BackendType.Tensorrt
     model.eval()
