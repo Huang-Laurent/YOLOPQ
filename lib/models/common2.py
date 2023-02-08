@@ -223,13 +223,14 @@ class Detect(nn.Module):
         z = []  # inference output
         for i in range(self.nl):
             x[i] = self.m[i](x[i])  # conv (bs,na*no,ny,nx)
+
             bs, _, ny, nx = x[i].shape
             # print(type(x[i]))
             # print(type(ny), nx)
             # workaround_ny = x.new_ones(ny).cumsum(0) - 1
             # xt = torch.Tensor(x[i])
-            workaround_nx = x[i].new_ones(nx).cumsum(0) - 1
-            workaround_ny = x[i].new_ones(ny).cumsum(0) - 1
+            # workaround_nx = x[i].new_ones(nx).cumsum(0) - 1
+            # workaround_ny = x[i].new_ones(ny).cumsum(0) - 1
 
             # x(bs,255,20,20) to x(bs,3,20,20,nc+5) (bs,na,ny,nx,no=nc+5=4+1+nc)
 
@@ -238,10 +239,10 @@ class Detect(nn.Module):
             if not self.training:  # inference
                 # if self.grid[i].shape[2:4] != x[i].shape[2:4] or self.onnx_dynamic:
                 #     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
-                # t1 = torch.arange(ny)
-                # t2 = torch.arange(nx)
-                t2 = workaround_nx
-                t1 = workaround_ny
+                t1 = torch.arange(ny)
+                t2 = torch.arange(nx)
+                # t2 = workaround_nx
+                # t1 = workaround_ny
                 tsrtp = [t1, t2]
                 yv, xv = torch.meshgrid(tsrtp)
                 self.grid[i] = torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float().to(x[i].device)
