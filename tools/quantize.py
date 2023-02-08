@@ -114,11 +114,12 @@ def main():
     print('bulid model 2/2')
 
     leaf_module = (Detect,)
+    prepare_custom_config_dict = {'leaf_module':leaf_module}
     print('prepare quantize model 1')
     backend = BackendType.Tensorrt
     model.eval()
     print('prepare quantize model 2')
-    model = prepare_by_platform(model, backend)  
+    model = prepare_by_platform(model, backend, prepare_custom_config_dict)  
     print('prepare quantize model 3')
     enable_calibration(model) 
 
