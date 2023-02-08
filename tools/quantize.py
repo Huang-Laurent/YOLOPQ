@@ -89,6 +89,7 @@ def main():
     # device = select_device(logger, 'cpu')
 
     model = get_net(cfg)
+    model.eval()
     print("build model 1/2")
 
     # define loss function (criterion) and optimizer
@@ -118,8 +119,8 @@ def main():
     extra_qconfig_dict = {
         'w_observer': 'MinMaxObserver',
         'a_observer': 'EMAMinMaxObserver',
-        # 'w_fakequantize': 'FixedFakeQuantize',
-        # 'a_fakequantize': 'FixedFakeQuantize',
+        'w_fakequantize': 'FixedFakeQuantize',
+        'a_fakequantize': 'FixedFakeQuantize',
     }
     
     # leaf_module = (Detect, Sigmoid, )
