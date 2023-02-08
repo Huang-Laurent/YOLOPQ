@@ -227,8 +227,8 @@ class Detect(nn.Module):
             # print(type(ny), nx)
             # workaround_ny = x.new_ones(ny).cumsum(0) - 1
             xt = torch.Tensor(x[i])
-            workaround_nx = x.new_ones(nx).cumsum(0) - 1
-            workaround_ny = x.new_ones(ny).cumsum(0) - 1
+            workaround_nx = xt.new_ones(nx).cumsum(0) - 1
+            workaround_ny = xt.new_ones(ny).cumsum(0) - 1
 
             # x(bs,255,20,20) to x(bs,3,20,20,nc+5) (bs,na,ny,nx,no=nc+5=4+1+nc)
 
