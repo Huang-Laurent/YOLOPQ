@@ -243,8 +243,17 @@ class Detect(nn.Module):
                 # t2 = torch.arange(nx)
                 # t2 = workaround_nx
                 # t1 = workaround_ny
-                t1 = torch.linspace(0, ny - 1, num=ny)
-                t2 = torch.linspace(0, nx - 1, num=nx)
+                range_ = []
+                for i in range(nx):
+                    range_.append(i)
+                t2 = torch.tensor(range_, dtype=torch.float32)
+
+                range_ = []
+                for i in range(ny):
+                    range_.append(i)
+                t1 = torch.tensor(range_, dtype=torch.float32)
+                # t1 = torch.linspace(0, ny - 1, num=ny)
+                # t2 = torch.linspace(0, nx - 1, num=nx)
                 tsrtp = [t1, t2]
                 yv, xv = torch.meshgrid(tsrtp)
                 self.grid[i] = torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float().to(x[i].device)
