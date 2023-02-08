@@ -141,6 +141,11 @@ def main():
     print('prepare quantize model 3')
     enable_calibration(model) 
 
+
+    print('quantize model')
+    enable_quantization(model)
+    print('quantize model done')
+
     print("begin to load data")
     # Data loading
     normalize = transforms.Normalize(
