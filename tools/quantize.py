@@ -99,15 +99,15 @@ def main():
     # det_idx_range = [str(i) for i in range(0,25)]
     model_dict = model.state_dict()
     # NOTE: Since 'weights' is a list, we need to read the element.
-    checkpoint_file = args.weights[0]
-    logger.info("=> loading checkpoint '{}'".format(checkpoint_file))
-    # NOTE: Adaption for CPU execution.
-    # checkpoint = torch.load(checkpoint_file, map_location=torch.device('cuda'))
-    checkpoint = torch.load(checkpoint_file, map_location=torch.device('cpu'))
-    checkpoint_dict = checkpoint['state_dict']
-    model_dict.update(checkpoint_dict)
-    model.load_state_dict(model_dict)
-    logger.info("=> loaded checkpoint '{}' ".format(checkpoint_file))
+    # checkpoint_file = args.weights[0]
+    # logger.info("=> loading checkpoint '{}'".format(checkpoint_file))
+    # # NOTE: Adaption for CPU execution.
+    # # checkpoint = torch.load(checkpoint_file, map_location=torch.device('cuda'))
+    # # checkpoint = torch.load(checkpoint_file, map_location=torch.device('cpu'))
+    # checkpoint_dict = checkpoint['state_dict']
+    # model_dict.update(checkpoint_dict)
+    # model.load_state_dict(model_dict)
+    # logger.info("=> loaded checkpoint '{}' ".format(checkpoint_file))
 
     model = model.to(device)
     model.gr = 1.0
