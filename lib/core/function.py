@@ -161,7 +161,7 @@ def validate(epoch,config, val_loader, val_dataset, model, criterion, output_dir
     da_metric = SegmentationMetric(config.num_seg_class) #segment confusion matrix    
     ll_metric = SegmentationMetric(2) #segment confusion matrix
 
-    names = {k: v for k, v in enumerate(model.names if hasattr(model, 'names') else model.module.names)}
+    names = "YOLOPQ"#{k: v for k, v in enumerate(model.names if hasattr(model, 'names') else model.module.names)}
     colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
     coco91class = coco80_to_coco91_class()
     
