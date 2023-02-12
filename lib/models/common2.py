@@ -306,7 +306,7 @@ class Detect(nn.Module):
 
             #     z.append(y.view(bs, -1, self.no))  # y (bs,na*ny*nx,no=2+2+1+nc=xy+wh+conf+cls_prob)
 
-        return x if self.training else (torch.cat(z, 1), x)
+        return x #if self.training else (torch.cat(z, 1), x)
     
         # torch.cat(z, 1) (bs,na*ny*nx*nl,no=2+2+1+nc=xy+wh+conf+cls_prob)
     # def forward(self, x):
