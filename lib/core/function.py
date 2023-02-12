@@ -157,7 +157,7 @@ def validate(epoch,config, val_loader, val_dataset, model, criterion, output_dir
         log_imgs = 0
 
     seen =  0 
-    confusion_matrix = ConfusionMatrix(nc=model.nc) #detector confusion matrix
+    confusion_matrix = ConfusionMatrix(nc=1) #detector confusion matrix
     da_metric = SegmentationMetric(config.num_seg_class) #segment confusion matrix    
     ll_metric = SegmentationMetric(2) #segment confusion matrix
 
