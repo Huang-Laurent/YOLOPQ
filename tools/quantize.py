@@ -68,7 +68,6 @@ def main():
     args = parse_args()
     update_config(cfg, args)
 
-
     # logger, final_output_dir, tb_log_dir = create_logger(
     #     cfg, cfg.LOG_DIR, 'train', rank=rank)
     logger, final_output_dir, tb_log_dir = create_logger(
