@@ -288,23 +288,23 @@ class Detect(nn.Module):
 
             x[i] = x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
 
-            if not self.training:  # inference
-                # if self.grid[i].shape[2:4] != x[i].shape[2:4] or self.onnx_dynamic:
-                #     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
+            # if not self.training:  # inference
+            #     # if self.grid[i].shape[2:4] != x[i].shape[2:4] or self.onnx_dynamic:
+            #     #     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
 
-                # self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
-                arg1 = self.arange(ny)#.to(dtype=torch.long)#, device=ny.device)
-                arg2 = self.arange(nx)#.to(dtype=torch.long)#, device=ny.device)
-                yv, xv = torch.cartesian_prod(torch.Tensor[arg1, arg2])
-                self.grid[i] = torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float()
-                # self.grid[i] = self.arange(ny).to(dtype=torch.long, device=ny.device)
-                y = x[i].sigmoid()  # (bs,na,ny,nx,no=nc+5=4+1+nc)
+            #     # self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
+            #     arg1 = self.arange(ny)#.to(dtype=torch.long)#, device=ny.device)
+            #     arg2 = self.arange(nx)#.to(dtype=torch.long)#, device=ny.device)
+            #     yv, xv = torch.cartesian_prod(torch.Tensor[arg1, arg2])
+            #     self.grid[i] = torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float()
+            #     # self.grid[i] = self.arange(ny).to(dtype=torch.long, device=ny.device)
+            #     y = x[i].sigmoid()  # (bs,na,ny,nx,no=nc+5=4+1+nc)
 
-                xy = (y[..., 0:2] * 2. - 0.5 + self.grid[i]) * self.stride[i]  # xy (bs,na,ny,nx,2)
-                wh = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i].view(1, self.na, 1, 1, 2)  # wh (bs,na,ny,nx,2)
-                y = torch.cat((xy, wh, y[..., 4:]), -1) # (bs,na,ny,nx,2+2+1+nc=xy+wh+conf+cls_prob)
+            #     xy = (y[..., 0:2] * 2. - 0.5 + self.grid[i]) * self.stride[i]  # xy (bs,na,ny,nx,2)
+            #     wh = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i].view(1, self.na, 1, 1, 2)  # wh (bs,na,ny,nx,2)
+            #     y = torch.cat((xy, wh, y[..., 4:]), -1) # (bs,na,ny,nx,2+2+1+nc=xy+wh+conf+cls_prob)
 
-                z.append(y.view(bs, -1, self.no))  # y (bs,na*ny*nx,no=2+2+1+nc=xy+wh+conf+cls_prob)
+            #     z.append(y.view(bs, -1, self.no))  # y (bs,na*ny*nx,no=2+2+1+nc=xy+wh+conf+cls_prob)
 
         return x if self.training else (torch.cat(z, 1), x)
     
