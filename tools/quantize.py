@@ -86,7 +86,7 @@ def main():
     # DP mode
     # device = select_device(logger, batch_size=cfg.TEST.BATCH_SIZE_PER_GPU* len(cfg.GPUS)) if not cfg.DEBUG \
     #     else select_device(logger, 'cpu')
-    =device = select_device(logger, 'cpu')
+    device = select_device(logger, 'cpu')
 
     model = get_net(cfg)
     print("build model 1/2")
