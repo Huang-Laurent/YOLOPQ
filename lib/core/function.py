@@ -121,7 +121,7 @@ def validate(epoch,config, val_loader, val_dataset, model, criterion, output_dir
     - config: configurations 
     - train_loader: loder for data
     - model: 
-    - lidatecriterion: (function) calculate all the loss, return 
+    - criterion: (function) calculate all the loss, return 
     - writer_dict: 
 
     Return:
@@ -157,12 +157,11 @@ def validate(epoch,config, val_loader, val_dataset, model, criterion, output_dir
         log_imgs = 0
 
     seen =  0 
-    # confusion_matrix = ConfusionMatrix(nc=model.nc) #detector confusion matrix
-    confusion_matrix = ConfusionMatrix(1)
+    confusion_matrix = ConfusionMatrix(nc=model.nc) #detector confusion matrix
     da_metric = SegmentationMetric(config.num_seg_class) #segment confusion matrix    
     ll_metric = SegmentationMetric(2) #segment confusion matrix
 
-    names = "YOLOPQ" #{k: v for k, v in enumerate(model.names if hasattr(model, 'names') else model.module.names)}
+    names = {k: v for k, v in enumerate(model.names if hasattr(model, 'names') else model.module.names)}
     colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
     coco91class = coco80_to_coco91_class()
     
@@ -202,8 +201,7 @@ def validate(epoch,config, val_loader, val_dataset, model, criterion, output_dir
             ratio = shapes[0][1][0][0]
 
             t = time_synchronized()
-            # model(img)
-            det_out, da_seg_out, ll_seg_out = model(img)
+            det_out, da_seg_out, ll_seg_out= model(img)
             t_inf = time_synchronized() - t
             if batch_i > 0:
                 T_inf.update(t_inf/img.size(0),img.size(0))
@@ -316,7 +314,7 @@ def validate(epoch,config, val_loader, val_dataset, model, criterion, output_dir
                             xyxy = (x1,y1,x2,y2)
                             plot_one_box(xyxy, img_gt , label=label_det_gt, color=colors[int(cls)], line_thickness=3)
                         cv2.imwrite(save_dir+"/batch_{}_{}_det_gt.png".format(epoch,i),img_gt)
-    
+
         # Statistics per image
         # output([xyxy,conf,cls])
         # target[0] ([img_id,cls,xyxy])

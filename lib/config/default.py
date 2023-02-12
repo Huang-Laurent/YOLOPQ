@@ -23,7 +23,7 @@ _C.CUDNN.ENABLED = True
 
 # common params for NETWORK
 _C.MODEL = CN(new_allowed=True)
-_C.MODEL.NAME = ''
+_C.MODEL.NAME = 'YOLOPQ'
 _C.MODEL.STRU_WITHSHARE = False     #add share_block to segbranch
 _C.MODEL.HEADS_NAME = ['']
 _C.MODEL.PRETRAINED = ""
