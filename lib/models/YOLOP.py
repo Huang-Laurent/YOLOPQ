@@ -505,115 +505,6 @@ YOLOP = [
 ]
 
 
-# class MCnet(nn.Module):
-#     def __init__(self, block_cfg, **kwargs):
-#         super(MCnet, self).__init__()
-#         layers, save= [], []
-#         self.nc = 1
-#         self.detector_index = -1
-#         self.det_out_idx = block_cfg[0][0]
-#         self.seg_out_idx = block_cfg[0][1:]
-
-#         self.up = nn.Sigmoid()
-
-#         # Build model
-#         for i, (from_, block, args) in enumerate(block_cfg[1:]):
-#             block = eval(block) if isinstance(block, str) else block  # eval strings
-#             if block is Detect:
-#                 self.detector_index = i
-#             block_ = block(*args)
-#             block_.index, block_.from_ = i, from_
-#             layers.append(block_)
-#             save.extend(x % i for x in ([from_] if isinstance(from_, int) else from_) if x != -1)  # append to savelist
-#         assert self.detector_index == block_cfg[0][0]
-
-#         self.model, self.save = nn.Sequential(*layers), sorted(save)
-#         # print(self.model)
-#         self.names = [str(i) for i in range(self.nc)]
-
-#         # set stride、anchor for detector
-#         Detector = self.model[self.detector_index]  # detector
-#         if isinstance(Detector, Detect):
-#             s = 128  # 2x min stride
-#             # for x in self.forward(torch.zeros(1, 3, s, s)):
-#             #     print (x.shape)
-#             with torch.no_grad():
-#                 model_out = self.forward(torch.zeros(1, 3, s, s))
-#                 detects, _, _= model_out
-#                 Detector.stride = torch.tensor([s / x.shape[-2] for x in detects])  # forward
-#             # print("stride"+str(Detector.stride ))
-#             Detector.anchors /= Detector.stride.view(-1, 1, 1)  # Set the anchors for the corresponding scale
-#             check_anchor_order(Detector)
-#             self.stride = Detector.stride
-
-#             print('biases init')
-#             self._initialize_biases()
-        
-#         initialize_weights(self)
-
-#     # @dynamo.optimize("inductor")
-#     def forward(self, x):
-#         cache = []
-#         out = []
-#         det_out = None
-#         Da_fmap = []
-#         LL_fmap = []
-#         # for i, block in enumerate(self.model):
-#         for i, block in enumerate(self.model):
-#             # print(i, block)
-#             if block.from_ != -1:
-#                 # x = cache[block.from_] if isinstance(block.from_, int) else [x if j == -1 else cache[j] for j in block.from_]
-#                 # temp = cache[block.from_]
-#                 # if isinstance(block.from_, int):
-#                 #     x = cache[block.from_]
-#                 # else:
-#                 #     # x = [x if j == -1 else cache[j] for j in block.from_] #calculate concat detect
-#                 #     result = []
-#                 #     for j in block.from_:
-#                 #         if j == -1:
-#                 #             result.append(x)
-#                 #         else:
-#                 #             result.append(cache[j])
-#                 #     x = result
-#                 x = cache[block.from_] if isinstance(block.from_, int) else [x if j == -1 else cache[j] for j in block.from_]
-#                 # print(block.from_)
-#             x = block(x)
-#             # if i in [33, 42]: #self.seg_out_idx:     #save driving area segment result
-#             if i in self.seg_out_idx:
-#                 # print(self.seg_out_idx)
-
-#                 # m = nn.Sigmoid()
-#                 out.append(self.up(x))
-#                 # out.append(m(x))
-
-#             if i == self.detector_index:
-#             # if i == 24:
-#                 # print(self.detector_index)
-#                 det_out = x
-
-#             cache.append(x if block.index in self.save else None)
-#             # if block.index in self.save:
-#             #     value = x
-#             # else:
-#             #     value = None
-#             # cache.append(value)
-#             # cache.append(x)
-#             # cache.append(x if block.index in self.save else None)
-#         out.insert(0,det_out)
-#         return out
-            
-    
-#     def _initialize_biases(self, cf=None):  # initialize biases into Detect(), cf is class frequency
-#         # https://arxiv.org/abs/1708.02002 section 3.3
-#         # cf = torch.bincount(torch.tensor(np.concatenate(dataset.labels, 0)[:, 0]).long(), minlength=nc) + 1.
-#         # m = self.model[-1]  # Detect() module
-#         m = self.model[self.detector_index]  # Detect() module
-#         for mi, s in zip(m.m, m.stride):  # from
-#             b = mi.bias.view(m.na, -1)  # conv.bias(255) to (3,85)
-#             b.data[:, 4] += math.log(8 / (640 / s) ** 2)  # obj (8 objects per 640 image)
-#             b.data[:, 5:] += math.log(0.6 / (m.nc - 0.99)) if cf is None else torch.log(cf / cf.sum())  # cls
-#             mi.bias = torch.nn.Parameter(b.view(-1), requires_grad=True)
-
 class MCnet(nn.Module):
     def __init__(self, block_cfg, **kwargs):
         super(MCnet, self).__init__()
@@ -622,7 +513,8 @@ class MCnet(nn.Module):
         self.detector_index = -1
         self.det_out_idx = block_cfg[0][0]
         self.seg_out_idx = block_cfg[0][1:]
-        
+
+        self.up = nn.Sigmoid()
 
         # Build model
         for i, (from_, block, args) in enumerate(block_cfg[1:]):
@@ -636,6 +528,7 @@ class MCnet(nn.Module):
         assert self.detector_index == block_cfg[0][0]
 
         self.model, self.save = nn.Sequential(*layers), sorted(save)
+        # print(self.model)
         self.names = [str(i) for i in range(self.nc)]
 
         # set stride、anchor for detector
@@ -652,26 +545,60 @@ class MCnet(nn.Module):
             Detector.anchors /= Detector.stride.view(-1, 1, 1)  # Set the anchors for the corresponding scale
             check_anchor_order(Detector)
             self.stride = Detector.stride
+
+            print('biases init')
             self._initialize_biases()
         
         initialize_weights(self)
 
+    # @dynamo.optimize("inductor")
     def forward(self, x):
         cache = []
         out = []
         det_out = None
         Da_fmap = []
         LL_fmap = []
+        # for i, block in enumerate(self.model):
         for i, block in enumerate(self.model):
+            # print(i, block)
             if block.from_ != -1:
-                x = cache[block.from_] if isinstance(block.from_, int) else [x if j == -1 else cache[j] for j in block.from_]       #calculate concat detect
+                # x = cache[block.from_] if isinstance(block.from_, int) else [x if j == -1 else cache[j] for j in block.from_]
+                # temp = cache[block.from_]
+                # if isinstance(block.from_, int):
+                #     x = cache[block.from_]
+                # else:
+                #     # x = [x if j == -1 else cache[j] for j in block.from_] #calculate concat detect
+                #     result = []
+                #     for j in block.from_:
+                #         if j == -1:
+                #             result.append(x)
+                #         else:
+                #             result.append(cache[j])
+                #     x = result
+                x = cache[block.from_] if isinstance(block.from_, int) else [x if j == -1 else cache[j] for j in block.from_]
+                # print(block.from_)
             x = block(x)
-            if i in self.seg_out_idx:     #save driving area segment result
-                m=nn.Sigmoid()
-                out.append(m(x))
+            # if i in [33, 42]: #self.seg_out_idx:     #save driving area segment result
+            if i in self.seg_out_idx:
+                # print(self.seg_out_idx)
+
+                # m = nn.Sigmoid()
+                out.append(self.up(x))
+                # out.append(m(x))
+
             if i == self.detector_index:
+            # if i == 24:
+                # print(self.detector_index)
                 det_out = x
+
             cache.append(x if block.index in self.save else None)
+            # if block.index in self.save:
+            #     value = x
+            # else:
+            #     value = None
+            # cache.append(value)
+            # cache.append(x)
+            # cache.append(x if block.index in self.save else None)
         out.insert(0,det_out)
         return out
             
@@ -686,6 +613,79 @@ class MCnet(nn.Module):
             b.data[:, 4] += math.log(8 / (640 / s) ** 2)  # obj (8 objects per 640 image)
             b.data[:, 5:] += math.log(0.6 / (m.nc - 0.99)) if cf is None else torch.log(cf / cf.sum())  # cls
             mi.bias = torch.nn.Parameter(b.view(-1), requires_grad=True)
+
+# class MCnet(nn.Module):
+#     def __init__(self, block_cfg, **kwargs):
+#         super(MCnet, self).__init__()
+#         layers, save= [], []
+#         self.nc = 1
+#         self.detector_index = -1
+#         self.det_out_idx = block_cfg[0][0]
+#         self.seg_out_idx = block_cfg[0][1:]
+        
+
+#         # Build model
+#         for i, (from_, block, args) in enumerate(block_cfg[1:]):
+#             block = eval(block) if isinstance(block, str) else block  # eval strings
+#             if block is Detect:
+#                 self.detector_index = i
+#             block_ = block(*args)
+#             block_.index, block_.from_ = i, from_
+#             layers.append(block_)
+#             save.extend(x % i for x in ([from_] if isinstance(from_, int) else from_) if x != -1)  # append to savelist
+#         assert self.detector_index == block_cfg[0][0]
+
+#         self.model, self.save = nn.Sequential(*layers), sorted(save)
+#         self.names = [str(i) for i in range(self.nc)]
+
+#         # set stride、anchor for detector
+#         Detector = self.model[self.detector_index]  # detector
+#         if isinstance(Detector, Detect):
+#             s = 128  # 2x min stride
+#             # for x in self.forward(torch.zeros(1, 3, s, s)):
+#             #     print (x.shape)
+#             with torch.no_grad():
+#                 model_out = self.forward(torch.zeros(1, 3, s, s))
+#                 detects, _, _= model_out
+#                 Detector.stride = torch.tensor([s / x.shape[-2] for x in detects])  # forward
+#             # print("stride"+str(Detector.stride ))
+#             Detector.anchors /= Detector.stride.view(-1, 1, 1)  # Set the anchors for the corresponding scale
+#             check_anchor_order(Detector)
+#             self.stride = Detector.stride
+#             self._initialize_biases()
+        
+#         initialize_weights(self)
+
+#     def forward(self, x):
+#         cache = []
+#         out = []
+#         det_out = None
+#         Da_fmap = []
+#         LL_fmap = []
+#         for i, block in enumerate(self.model):
+#             if block.from_ != -1:
+#                 x = cache[block.from_] if isinstance(block.from_, int) else [x if j == -1 else cache[j] for j in block.from_]       #calculate concat detect
+#             x = block(x)
+#             if i in self.seg_out_idx:     #save driving area segment result
+#                 m=nn.Sigmoid()
+#                 out.append(m(x))
+#             if i == self.detector_index:
+#                 det_out = x
+#             cache.append(x if block.index in self.save else None)
+#         out.insert(0,det_out)
+#         return out
+            
+    
+#     def _initialize_biases(self, cf=None):  # initialize biases into Detect(), cf is class frequency
+#         # https://arxiv.org/abs/1708.02002 section 3.3
+#         # cf = torch.bincount(torch.tensor(np.concatenate(dataset.labels, 0)[:, 0]).long(), minlength=nc) + 1.
+#         # m = self.model[-1]  # Detect() module
+#         m = self.model[self.detector_index]  # Detect() module
+#         for mi, s in zip(m.m, m.stride):  # from
+#             b = mi.bias.view(m.na, -1)  # conv.bias(255) to (3,85)
+#             b.data[:, 4] += math.log(8 / (640 / s) ** 2)  # obj (8 objects per 640 image)
+#             b.data[:, 5:] += math.log(0.6 / (m.nc - 0.99)) if cf is None else torch.log(cf / cf.sum())  # cls
+#             mi.bias = torch.nn.Parameter(b.view(-1), requires_grad=True)
 
 
 def get_net(cfg, **kwargs): 
